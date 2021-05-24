@@ -1,14 +1,18 @@
-import os
-import boto3
-import mimetypes
+import datetime
 import json
-import requests
-import subprocess
-import tempfile
+import math
+import mimetypes
+import os
 import pathlib
 import shutil
+import subprocess
+import tempfile
+
+import boto3
+import requests
 
 s3 = boto3.resource('s3')
+cloudfront = boto3.client('cloudfront')
 defaultContentType = 'application/octet-stream'
 
 def resource_handler(event, context):
@@ -19,9 +23,12 @@ def resource_handler(event, context):
     acl = event['ResourceProperties']['Acl']
     cacheControl = 'max-age=' + \
         event['ResourceProperties']['CacheControlMaxAge']
+    distribution_id = event['ResourceProperties']['DistributionId']
+    path = event['ResourceProperties']['Path']
+
     print(event['RequestType'])
     if event['RequestType'] == 'Create' or event['RequestType'] == 'Update':
-      
+
       if 'Substitutions' in event['ResourceProperties'].keys():
         temp_dir = os.path.join(tempfile.mkdtemp(), context.aws_request_id)
         apply_substitutions(event['ResourceProperties']['Substitutions'], temp_dir)
@@ -29,6 +36,7 @@ def resource_handler(event, context):
 
       print('uploading')
       upload(lambda_src, target_bucket, acl, cacheControl)
+      create_cloudfront_invalidation(distribution_id, path)
     elif event['RequestType'] == 'Delete':
       delete(lambda_src, target_bucket, s3)
     else:
@@ -130,3 +138,17 @@ def apply_substitutions(substitutions, temp_dir):
 
 def sed_escape(text):
  return text.replace('/', '\\/')
+
+def create_cloudfront_invalidation(distribution_id, path):
+  ts = datetime.datetime.now().timestamp()
+  ref = math.trunc(ts * 100)
+
+  invalidation_batch = dict(
+    Paths=dict(
+      Quantity=1,
+      Items=[path]
+    ),
+    CallerReference=f'{ref}'
+  )
+
+  cloudfront.create_invalidation(DistributionId=distribution_id, InvalidationBatch=invalidation_batch)

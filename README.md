@@ -4,6 +4,12 @@ Deploy and publish Frontend SPA apps, UI components, static websites and MicroFr
 
 For more information, see [How to use CloudFormation to deploy Frontend Apps to S3 and Serverless Application Repository](https://serverless.pub/deploy-frontend-to-s3-and-sar/).
 
+## Publishing Application Repo
+
+To publish the application repo, run on the root folder:
+
+`make publish DEPLOYMENT_BUCKET_NAME=<s3 cloudformation deployment bucket>`
+
 ## Deploying the example
 
 There is a full example of a website to be deployed to S3 in the `example` directory, including applying substitutions to files.
