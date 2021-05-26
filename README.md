@@ -66,3 +66,7 @@ For full instructions and *code comments* please take a look at the example [tem
 For deploying your SPA app, along with your other serverless services, to try it out, in the `/example` directory, run:
 
 `make deploy STACK_NAME=<name of cf stack> DEPLOYMENT_BUCKET_NAME=<s3 cloudformation deployment bucket>`
+
+Lime is deploying this like so:
+
+    AWS_PROFILE=ditest AWS_DEFAULT_REGION=us-east-2 make publish DEPLOYMENT_BUCKET_NAME=devops-shared-artifacts-us-east-2

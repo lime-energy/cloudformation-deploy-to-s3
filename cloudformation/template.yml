@@ -10,7 +10,6 @@ Resources:
         - python3.6
         - python3.7
       Description: S3 Deployment Layer
-      LayerName: !Ref AWS::StackName
       LicenseInfo: MIT
       ContentUri: ../build
       RetentionPolicy: Retain
