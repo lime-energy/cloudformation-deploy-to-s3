@@ -119,7 +119,7 @@ def apply_substitutions(substitutions, temp_dir):
   if not 'FilePattern' in substitutions.keys():
     raise ValueError('Substitutions must contain FilePattern')
 
-  if not isinstance(substitutions['FilePattern'], str):
+  if not (isinstance(substitutions['FilePattern'], str)):
     raise ValueError('Substitutions.FilePattern must be a String')
 
   if len(substitutions['FilePattern']) < 1:
@@ -127,14 +127,16 @@ def apply_substitutions(substitutions, temp_dir):
 
   values = substitutions['Values']
   file_pattern = substitutions['FilePattern']
+  file_patterns = file_pattern.split(',')
 
   subprocess.run(['cp', '-r', os.getcwd(), temp_dir])
 
-  for full_path in pathlib.Path(temp_dir).glob(file_pattern):
-    replace_with_command = lambda key: 's/\\${%s}/%s/g'% (sed_escape(key), sed_escape(values[key]))
-    replacements = list(map(replace_with_command, values.keys()))
-    sed_script = ';'.join(replacements)
-    subprocess.run(['sed', sed_script, '-i', str(full_path)], cwd=tempfile.gettempdir(), check=True)
+  for pattern in file_patterns:
+    for full_path in pathlib.Path(temp_dir).glob(pattern):
+      replace_with_command = lambda key: 's/\\${%s}/%s/g'% (sed_escape(key), sed_escape(values[key]))
+      replacements = list(map(replace_with_command, values.keys()))
+      sed_script = ';'.join(replacements)
+      subprocess.run(['sed', sed_script, '-i', str(full_path)], cwd=tempfile.gettempdir(), check=True)
 
 def sed_escape(text):
  return text.replace('/', '\\/')
