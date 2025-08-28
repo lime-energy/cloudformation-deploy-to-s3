@@ -7,8 +7,7 @@ Resources:
     Type: AWS::Serverless::LayerVersion
     Properties:
       CompatibleRuntimes:
-        - python3.6
-        - python3.7
+        - python3.13
       Description: S3 Deployment Layer
       LicenseInfo: MIT
       ContentUri: ../build

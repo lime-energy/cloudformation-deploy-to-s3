@@ -8,7 +8,7 @@ build/python/deployer.py: src/deployer.py build/python
 	cp $< $@
 
 build/python/requests: build/python
-	pip install requests --target build/python
+	pip install requests boto3 --target build/python
 
 output.yml: cloudformation/template.yml build/python/requests build/python/deployer.py
 	aws cloudformation package --s3-prefix=cf-packages/cloudformation-deploy-to-s3.yml --template-file $< --output-template-file $@ --s3-bucket $(DEPLOYMENT_BUCKET_NAME)
