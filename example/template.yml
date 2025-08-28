@@ -40,7 +40,7 @@ Resources:
       AutoPublishAlias: live
 
       # the following two lines are required to make the layer work
-      Runtime: python3.6 
+      Runtime: python3.13
       Handler: deployer.resource_handler
 
       # set the timeout to something reasonable depending on

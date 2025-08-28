@@ -37,7 +37,7 @@ The easiest place to deploy this is from the [Serverless App Repository](https:/
         - !GetAtt DeploymentLayer.Outputs.Arn
       CodeUri: web-site/
       AutoPublishAlias: live
-      Runtime: python3.6
+      Runtime: python3.13
       Handler: deployer.resource_handler
       Timeout: 600
       Policies:
