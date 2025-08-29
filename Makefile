@@ -18,4 +18,4 @@ deploy: output.yml
 	aws cloudformation describe-stacks --stack-name $(STACK_NAME) --query Stacks[].Outputs[].OutputValue --output text
 
 publish: output.yml
-	sam publish -t output.yml --semantic-version 0.0.3
+	sam publish -t output.yml --semantic-version 0.0.4
